@@ -5,9 +5,11 @@ import br.com.attornatus.testbackend.dto.output.PessoaOutput;
 
 import java.util.List;
 
-public interface PersonService {
+public interface PessoaService {
 
     List<PessoaOutput> findAll();
     PessoaOutput findById(Long pessoaId);
     PessoaOutput save(PessoaInput pessoaInput);
+    void delete(Long pessoaId);
+    PessoaOutput update(Long pessoaId, PessoaInput pessoaInput);
 }

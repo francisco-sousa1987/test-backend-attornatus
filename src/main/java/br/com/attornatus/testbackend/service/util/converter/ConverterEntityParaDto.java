@@ -1,4 +1,4 @@
-package br.com.attornatus.testbackend.util.converter;
+package br.com.attornatus.testbackend.service.util.converter;
 
 import br.com.attornatus.testbackend.dto.output.EnderecoOutput;
 import br.com.attornatus.testbackend.dto.output.PessoaOutput;

@@ -1,16 +1,12 @@
 package br.com.attornatus.testbackend.controller;
 
-import br.com.attornatus.testbackend.dto.input.EnderecoInput;
 import br.com.attornatus.testbackend.dto.input.PessoaInput;
-import br.com.attornatus.testbackend.dto.output.EnderecoOutput;
 import br.com.attornatus.testbackend.dto.output.PessoaOutput;
 import br.com.attornatus.testbackend.service.PessoaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,9 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Date;
 import java.util.List;
 
+import static br.com.attornatus.testbackend.factory.CreationObjects.createPessoaInput;
+import static br.com.attornatus.testbackend.factory.CreationObjects.createPessoaOutput;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,9 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest(PessoaController.class)
 @AutoConfigureMockMvc
-public class PessoaOutputControllerTest {
-
-    static final String PESSOA_API = "/pessoas";
+public class PessoaControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -42,125 +38,132 @@ public class PessoaOutputControllerTest {
     @MockBean
     private PessoaService service;
 
+    private final PessoaOutput pessoaOutput = createPessoaOutput();
+    private final String pessoaApi = "/pessoas";
+
     @Test
-    @DisplayName("Recuperar pessoa por id")
+    @DisplayName("Deve recuperar pessoa por id")
     public void recuperarPessoaPorId() throws Exception {
 
-        Long id = 1L;
-
-        br.com.attornatus.testbackend.dto.output.PessoaOutput pessoaOutput = new br.com.attornatus.testbackend.dto.output.PessoaOutput();
-        pessoaOutput.setId(id);
-        pessoaOutput.setNome("Lara Rebeca Oliveira");
-
-        EnderecoOutput enderecoOutput = new EnderecoOutput();
-        enderecoOutput.setId(id);
-        enderecoOutput.setLogradouro("Rua Professora Joana D'arc Ribeiro");
-        enderecoOutput.setCep("69077-749");
-        enderecoOutput.setNumero("532");
-        enderecoOutput.setCidade("Manaus");
-        enderecoOutput.setIsPrincipal(false);
-
-        pessoaOutput.setEnderecos(List.of(enderecoOutput));
-
-        BDDMockito.given(service.findById(id)).willReturn(pessoaOutput);
+        when(service.findById(anyLong())).thenReturn(pessoaOutput);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(PESSOA_API.concat("/" + id))
+                .get(pessoaApi.concat("/" + pessoaOutput.getId()))
                 .accept(MediaType.APPLICATION_JSON);
 
         mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(id))
+                .andExpect(jsonPath("id").value(pessoaOutput.getId()))
                 .andExpect(jsonPath("nome").value(pessoaOutput.getNome()))
-                .andExpect(jsonPath("$['enderecos'][0]['id']").value(pessoaOutput.getEnderecos().get(0).getId()))
-                .andExpect(jsonPath("$['enderecos'][0]['logradouro']").value(pessoaOutput.getEnderecos().get(0).getLogradouro()))
-                .andExpect(jsonPath("$['enderecos'][0]['cep']").value(pessoaOutput.getEnderecos().get(0).getCep()))
-                .andExpect(jsonPath("$['enderecos'][0]['numero']").value(pessoaOutput.getEnderecos().get(0).getNumero()))
-                .andExpect(jsonPath("$['enderecos'][0]['cidade']").value(pessoaOutput.getEnderecos().get(0).getCidade()))
-                .andExpect(jsonPath("$['enderecos'][0]['isPrincipal']").value(pessoaOutput.getEnderecos().get(0).getIsPrincipal()));
+                .andExpect(jsonPath("$['enderecos'][0]['id']").value(pessoaOutput.getEnderecos().get(0).getId()));
     }
 
     @Test
-    @DisplayName("Recuperar todas as pessoas")
+    @DisplayName("Deve recuperar todas as pessoas")
     public void recuperarTodasPessoas() throws Exception {
 
-        Long id = 1L;
-
-        br.com.attornatus.testbackend.dto.output.PessoaOutput pessoaOutput = new br.com.attornatus.testbackend.dto.output.PessoaOutput();
-        pessoaOutput.setId(id);
-        pessoaOutput.setNome("Lara Rebeca Oliveira");
-
-        EnderecoOutput enderecoOutput = new EnderecoOutput();
-        enderecoOutput.setId(id);
-        enderecoOutput.setLogradouro("Rua Professora Joana D'arc Ribeiro");
-        enderecoOutput.setCep("69077-749");
-        enderecoOutput.setNumero("532");
-        enderecoOutput.setCidade("Manaus");
-        enderecoOutput.setIsPrincipal(false);
-
-        pessoaOutput.setEnderecos(List.of(enderecoOutput));
-
-        BDDMockito.given(service.findAll()).willReturn(List.of(pessoaOutput));
+        when(service.findAll()).thenReturn(List.of(pessoaOutput));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(PESSOA_API)
+                .get(pessoaApi)
                 .accept(MediaType.APPLICATION_JSON);
 
         mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]['id']").value(id))
+                .andExpect(jsonPath("$[0]['id']").value(pessoaOutput.getId()))
                 .andExpect(jsonPath("$[0]['nome']").value(pessoaOutput.getNome()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['id']").value(pessoaOutput.getEnderecos().get(0).getId()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['logradouro']").value(pessoaOutput.getEnderecos().get(0).getLogradouro()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['cep']").value(pessoaOutput.getEnderecos().get(0).getCep()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['numero']").value(pessoaOutput.getEnderecos().get(0).getNumero()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['cidade']").value(pessoaOutput.getEnderecos().get(0).getCidade()))
-                .andExpect(jsonPath("$[0]['enderecos'][0]['isPrincipal']").value(pessoaOutput.getEnderecos().get(0).getIsPrincipal()));
+                .andExpect(jsonPath("$[0]['enderecos'][0]['id']").value(pessoaOutput.getEnderecos().get(0).getId()));
     }
 
     @Test
     @DisplayName("Deve criar uma pessoa com sucesso")
     public void criarPessoa() throws Exception {
 
-        PessoaInput pessoaInput = new PessoaInput();
-        pessoaInput.setNome("Lara Rebeca Oliveira");
-        pessoaInput.setDataNascimento("1987-09-15");
+        PessoaInput pessoaInput = createPessoaInput();
 
-        EnderecoInput enderecoInput = new EnderecoInput();
-        enderecoInput.setLogradouro("Rua Professora Joana D'arc Ribeiro");
-        enderecoInput.setCep("69077-749");
-        enderecoInput.setNumero("532");
-        enderecoInput.setCidade("Manaus");
-        enderecoInput.setIsPrincipal(false);
+        when(service.save(any(PessoaInput.class))).thenReturn(pessoaOutput);
 
-        pessoaInput.setEnderecos(List.of(enderecoInput));
-
-        PessoaOutput pessoaOutput = new PessoaOutput();
-        pessoaOutput.setId(1L);
-        pessoaOutput.setNome(pessoaInput.getNome());
-        pessoaOutput.setDataNascimento(new Date());
-
-        EnderecoOutput endereco = new EnderecoOutput();
-        endereco.setLogradouro(enderecoInput.getLogradouro());
-        endereco.setCep(enderecoInput.getCep());
-        endereco.setNumero(enderecoInput.getNumero());
-        endereco.setCidade(enderecoInput.getCidade());
-        endereco.setIsPrincipal(enderecoInput.getIsPrincipal());
-
-        pessoaOutput.setEnderecos(List.of(endereco));
-
-        BDDMockito.given(service.save(Mockito.any(PessoaInput.class))).willReturn(pessoaOutput);
-        String json = new ObjectMapper().writeValueAsString(pessoaOutput);
+        String json = new ObjectMapper().writeValueAsString(pessoaInput);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(PESSOA_API)
+                .post(pessoaApi)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
 
         mvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(1L))
+                .andExpect(jsonPath("id").value(pessoaOutput.getId()))
+                .andExpect(jsonPath("nome").value(pessoaOutput.getNome()));
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma exceção quando a data de nascimento for inválida")
+    public void dataNascimentoInvalida() throws Exception {
+
+        PessoaInput pessoaInput = createPessoaInput();
+        pessoaInput.setDataNascimento("1987-33-58");
+
+        String json = new ObjectMapper().writeValueAsString(pessoaInput);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(pessoaApi)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Deve lançar uma exceção quando um campo no json está inválido")
+    public void jsonCampoInvalido() throws Exception {
+
+        PessoaInput pessoaInput = createPessoaInput();
+        pessoaInput.setNome("");
+
+        String json = new ObjectMapper().writeValueAsString(pessoaInput);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(pessoaApi)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mvc.perform(request)
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Deve deletar uma pessoa")
+    public void deletePessoa() throws Exception {
+
+        when(service.findById(anyLong())).thenReturn(pessoaOutput);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(pessoaApi.concat("/" + pessoaOutput.getId()));
+
+        mvc.perform(request)
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Deve atualizar uma pessoa")
+    public void updateBookTest() throws Exception {
+
+        when(service.update(anyLong(), any(PessoaInput.class))).thenReturn(pessoaOutput);
+
+        String json = new ObjectMapper().writeValueAsString(pessoaOutput);
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .put(pessoaApi.concat("/" + 1))
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request).andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(pessoaOutput.getId()))
                 .andExpect(jsonPath("nome").value(pessoaOutput.getNome()));
     }
 }

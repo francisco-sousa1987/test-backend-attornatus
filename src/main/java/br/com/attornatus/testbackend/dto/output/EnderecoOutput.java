@@ -7,9 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class AddressOutput {
+public class EnderecoOutput {
 
     private Long id;
 
@@ -20,4 +18,6 @@ public class AddressOutput {
     private String numero;
 
     private String cidade;
+
+    private Boolean isPrincipal;
 }

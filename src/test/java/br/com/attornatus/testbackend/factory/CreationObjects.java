@@ -1,9 +1,11 @@
-package br.com.attornatus.testbackend.controller.factory;
+package br.com.attornatus.testbackend.factory;
 
 import br.com.attornatus.testbackend.dto.input.EnderecoInput;
 import br.com.attornatus.testbackend.dto.input.PessoaInput;
 import br.com.attornatus.testbackend.dto.output.EnderecoOutput;
 import br.com.attornatus.testbackend.dto.output.PessoaOutput;
+import br.com.attornatus.testbackend.entity.Endereco;
+import br.com.attornatus.testbackend.entity.Pessoa;
 
 import java.util.Date;
 import java.util.List;
@@ -76,5 +78,50 @@ public class CreationObjects {
         enderecoInput.setIsPrincipal(false);
 
         return enderecoInput;
+    }
+
+    public static Pessoa createPessoa() {
+
+        Pessoa pessoa = new Pessoa();
+        Endereco endereco1 = new Endereco();
+        Endereco endereco2 = new Endereco();
+
+        pessoa.setId(1L);
+        pessoa.setNome("Lara Rebeca Oliveira");
+        pessoa.setDataNascimento(new Date());
+
+        endereco1.setId(1L);
+        endereco1.setLogradouro("Rua Professora Joana D'arc Ribeiro");
+        endereco1.setCep("69077-749");
+        endereco1.setNumero("532");
+        endereco1.setCidade("Manaus");
+        endereco1.setIsPrincipal(true);
+
+        endereco2.setId(2L);
+        endereco2.setLogradouro("Rua Professora Joana D'arc Ribeiro");
+        endereco2.setCep("69077-749");
+        endereco2.setNumero("532");
+        endereco2.setCidade("Manaus");
+        endereco2.setIsPrincipal(true);
+
+        pessoa.setEnderecos(List.of(endereco1, endereco2));
+
+        return pessoa;
+    }
+
+    public static Endereco createEndereco() {
+
+        Long id = 1L;
+
+        Endereco endereco = new Endereco();
+
+        endereco.setId(id);
+        endereco.setLogradouro("Rua Professora Joana D'arc Ribeiro");
+        endereco.setCep("69077-749");
+        endereco.setNumero("532");
+        endereco.setCidade("Manaus");
+        endereco.setIsPrincipal(false);
+
+        return endereco;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @Table(name = "tb_pessoa")
 @Entity
-public class PessoaOutput implements Serializable {
+public class Pessoa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class PessoaOutput implements Serializable {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PessoaOutput pessoa = (PessoaOutput) o;
+        Pessoa pessoa = (Pessoa) o;
 
         return new EqualsBuilder().append(id, pessoa.id).isEquals();
     }

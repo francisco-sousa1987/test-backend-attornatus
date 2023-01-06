@@ -1,8 +1,7 @@
-package br.com.attornatus.testbackend.util.converter;
+package br.com.attornatus.testbackend.service.util.converter;
 
 import br.com.attornatus.testbackend.dto.input.EnderecoInput;
 import br.com.attornatus.testbackend.dto.input.PessoaInput;
-import br.com.attornatus.testbackend.dto.output.PessoaOutput;
 import br.com.attornatus.testbackend.entity.Endereco;
 import br.com.attornatus.testbackend.entity.Pessoa;
 import org.modelmapper.ModelMapper;

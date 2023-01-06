@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PersonInput {
+public class PessoaInput {
 
     @NotBlank
     private String nome;

@@ -1,4 +1,4 @@
-package br.com.attornatus.testbackend.util.validator;
+package br.com.attornatus.testbackend.controller.util.validator;
 
 import br.com.attornatus.testbackend.exception.DataNascimentoInvalidaException;
 
