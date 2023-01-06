@@ -1,0 +1,1 @@
+insert into pessoa (id, nome, data_nascimento) values (1, 'Francisco', '1987-09-15');
