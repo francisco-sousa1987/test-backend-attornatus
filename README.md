@@ -12,3 +12,4 @@ Clone o repositório e espere baixar as dependências do projeto.
 - Foi utilizada a versão mais nova do Spring;
 - Foi utilizado o Lombok para diminuição do código boilerplate. Previamente já configurado no IntelliJ;
 - Não estou usando a anotação @EqualsAndHashCode do Lombok pois a utilização da mesma não é recomendada em entidades JPA podendo causar severa perca de performance e consumo excessivo de memória;
+- O código está coberto com testes unitários;
